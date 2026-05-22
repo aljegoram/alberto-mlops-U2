@@ -63,7 +63,7 @@ pip install -r requirements.txt
 Ejecutar API:
 
 ```bash
-python app/main.py
+python -m app.main
 ```
 
 ## 5. Construir imagen Docker
@@ -113,6 +113,62 @@ Respuesta esperada:
 {
   "estado": "OK",
   "resultado": "ENFERMEDAD TERMINAL"
+}
+```
+## Reporte de estadísticas
+
+Se agregó el endpoint:
+
+```text
+GET /estadisticas
+```
+
+Este endpoint permite consultar:
+
+- Número total de predicciones realizadas.
+- Número total de predicciones por categoría.
+- Últimas 5 predicciones realizadas.
+- Fecha de la última predicción.
+
+## Ejemplo de uso
+
+Primero realiza algunas predicciones:
+
+```bash
+curl -X POST http://localhost:5000/predecir \
+  -H "Content-Type: application/json" \
+  -d "{\"edad\":85,\"presion\":190,\"sintomas\":10}"
+```
+
+Luego consulta las estadísticas:
+
+```bash
+curl http://localhost:5000/estadisticas
+```
+
+Respuesta esperada de ejemplo:
+
+```json
+{
+  "total_predicciones": 1,
+  "total_por_categoria": {
+    "NO ENFERMO": 0,
+    "ENFERMEDAD LEVE": 0,
+    "ENFERMEDAD AGUDA": 0,
+    "ENFERMEDAD CRÓNICA": 0,
+    "ENFERMEDAD TERMINAL": 1
+  },
+  "ultimas_5_predicciones": [
+    {
+      "fecha": "2026-05-22T10:30:00+00:00",
+      "edad": 85,
+      "presion": 190,
+      "sintomas": 10,
+      "resultado": "ENFERMEDAD TERMINAL",
+      "version_modelo": "v2.0-simulada"
+    }
+  ],
+  "fecha_ultima_prediccion": "2026-05-22T10:30:00+00:00"
 }
 ```
 
