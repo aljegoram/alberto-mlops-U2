@@ -1,0 +1,93 @@
+name: CI/CD MLOps Taller 2
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  pruebas-en-pr:
+    name: Pruebas unitarias en Pull Request
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Comentar inicio del pipeline en PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "CI/CD en acción. Ejecutando tareas …"
+            })
+
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar pruebas unitarias
+        run: python -m pytest -q
+
+      - name: Comentar éxito del pipeline en PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "CI/CD terminado con éxito."
+            })
+
+  pruebas-build-publicacion-main:
+    name: Pruebas, build y publicación en main
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar pruebas unitarias
+        run: python -m pytest -q
+
+      - name: Autenticarse en GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Construir y publicar imagen Docker en GitHub Packages
+        run: |
+          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY,,}"
+          docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:${GITHUB_SHA}" .
+          docker push "$IMAGE_NAME:latest"
+          docker push "$IMAGE_NAME:${GITHUB_SHA}"
