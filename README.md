@@ -1,40 +1,95 @@
-# alberto-mlops-U2
+# Taller 2 — Solución inicial del servicio médico simulado
 
-Repoditorio para MLOPS
+## 1. Descripción general
 
+Este repositorio contiene una solución de MLOps para un caso médico simulado.
 
+La solución expone una API con Flask que recibe datos básicos de un paciente y retorna una clasificación simulada del estado del paciente.
 
-\## Descripción del problema
+Esta versión corresponde a la solución inicial basada en el Taller 1.
 
+## 2. Categorías de predicción iniciales
 
+La función simulada retorna una de las siguientes categorías:
 
-Este repositorio contiene una solución de MLOps para un caso médico simulado. El objetivo es exponer una función de predicción mediante una API, empaquetarla con Docker y aplicar prácticas de control de versiones, ramas, Pull Requests y CI/CD con GitHub Actions.
+- `NO ENFERMO`
+- `ENFERMEDAD LEVE`
+- `ENFERMEDAD AGUDA`
+- `ENFERMEDAD CRÓNICA`
 
+## 3. Estructura del proyecto
 
+```text
+app/
+├── __init__.py
+├── main.py
+└── model.py
+scripts/
+└── probar_api.sh
+Dockerfile
+requirements.txt
+README.md
+.dockerignore
+.gitignore
+```
 
-\## Propósito
+## 4. Ejecución local
 
+Crear entorno virtual:
 
+```bash
+python -m venv venv
+```
 
-El propósito del repositorio es evolucionar la solución inicial del Taller 1 hacia una solución versionada y automatizada, incorporando nuevos requerimientos funcionales y un pipeline de CI/CD.
+Activar entorno en Windows:
 
+```bash
+venv\Scripts\activate
+```
 
+Activar entorno en Linux/Mac:
 
-\## Estructura
+```bash
+source venv/bin/activate
+```
 
+Instalar dependencias:
 
+```bash
+pip install -r requirements.txt
+```
 
-\- `app/`: código fuente de la API y función predictiva.
+Ejecutar API:
 
-\- `tests/`: pruebas unitarias.
+```bash
+python app/main.py
+```
 
-\- `.github/workflows/`: workflows de GitHub Actions.
+## 5. Construir imagen Docker
 
-\- `Dockerfile`: archivo para construir la imagen Docker.
+```bash
+docker build -t medico-mlops .
+```
 
-\- `requirements.txt`: dependencias del proyecto.
+## 6. Ejecutar contenedor Docker
 
-\- `README.md`: documentación principal del repositorio.
+```bash
+docker run -p 5000:5000 medico-mlops
+```
 
+## 7. Probar la API
 
+Ruta principal:
+
+```bash
+curl http://localhost:5000/
+```
+
+Predicción:
+
+```bash
+curl -X POST http://localhost:5000/predecir \
+  -H "Content-Type: application/json" \
+  -d "{\"edad\":70,\"presion\":160,\"sintomas\":9}"
+```
 
