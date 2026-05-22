@@ -16,6 +16,7 @@ La función simulada retorna una de las siguientes categorías:
 - `ENFERMEDAD LEVE`
 - `ENFERMEDAD AGUDA`
 - `ENFERMEDAD CRÓNICA`
+- `ENFERMEDAD TERMINAL`
 
 ## 3. Estructura del proyecto
 
@@ -91,5 +92,27 @@ Predicción:
 curl -X POST http://localhost:5000/predecir \
   -H "Content-Type: application/json" \
   -d "{\"edad\":70,\"presion\":160,\"sintomas\":9}"
+```
+
+
+## Nueva categoría agregada
+
+Se incorpora la categoría `ENFERMEDAD TERMINAL` como nuevo requerimiento funcional del Taller 2.
+
+Ejemplo de entrada que retorna `ENFERMEDAD TERMINAL`:
+
+```bash
+curl -X POST http://localhost:5000/predecir \
+  -H "Content-Type: application/json" \
+  -d "{\"edad\":85,\"presion\":190,\"sintomas\":10}"
+```
+
+Respuesta esperada:
+
+```json
+{
+  "estado": "OK",
+  "resultado": "ENFERMEDAD TERMINAL"
+}
 ```
 
