@@ -1,16 +1,22 @@
 """
-Módulo de predicción simulada para la solución inicial.
+Módulo de predicción simulada para el Taller 2 de MLOps.
 
-Esta versión corresponde a la solución del Taller 1:
-- NO ENFERMO
-- ENFERMEDAD LEVE
-- ENFERMEDAD AGUDA
-- ENFERMEDAD CRÓNICA
+Esta versión agrega la nueva categoría solicitada:
+- ENFERMEDAD TERMINAL
 
 IMPORTANTE:
 Esta función no representa una regla médica real.
-Es una simulación académica para practicar MLOps, Docker y despliegue.
+Es una simulación académica para practicar MLOps, GitHub, CI/CD y Docker.
 """
+
+
+CATEGORIAS = [
+    "NO ENFERMO",
+    "ENFERMEDAD LEVE",
+    "ENFERMEDAD AGUDA",
+    "ENFERMEDAD CRÓNICA",
+    "ENFERMEDAD TERMINAL",
+]
 
 
 def validar_entradas(edad, presion, sintomas):
@@ -57,14 +63,17 @@ def predecir_estado_paciente(edad, presion, sintomas):
             "mensaje": error
         }
 
-    if sintomas <= 1 and presion < 130:
+    if edad >= 80 and sintomas >= 9 and presion >= 180:
+        resultado = "ENFERMEDAD TERMINAL"
+
+    elif edad >= 60 and sintomas >= 8 and presion >= 150:
+        resultado = "ENFERMEDAD CRÓNICA"
+
+    elif sintomas <= 1 and presion < 130:
         resultado = "NO ENFERMO"
 
     elif sintomas <= 4 and presion < 140:
         resultado = "ENFERMEDAD LEVE"
-
-    elif edad >= 60 and sintomas >= 8 and presion >= 150:
-        resultado = "ENFERMEDAD CRÓNICA"
 
     else:
         resultado = "ENFERMEDAD AGUDA"
@@ -77,5 +86,5 @@ def predecir_estado_paciente(edad, presion, sintomas):
             "presion": presion,
             "sintomas": sintomas
         },
-        "version_modelo": "v1.0-simulada"
+        "version_modelo": "v2.0-simulada"
     }
