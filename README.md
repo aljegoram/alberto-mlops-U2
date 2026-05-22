@@ -171,4 +171,35 @@ Respuesta esperada de ejemplo:
   "fecha_ultima_prediccion": "2026-05-22T10:30:00+00:00"
 }
 ```
+## Pruebas unitarias
+
+El proyecto incluye pruebas unitarias con `pytest`.
+
+Las pruebas se encuentran en la carpeta:
+
+```text
+tests/
+```
+
+Incluyen validaciones sobre:
+
+- Retorno de la categoría `ENFERMEDAD TERMINAL`.
+- Retorno de las cinco categorías de predicción.
+- Validación de campos faltantes.
+- Estadísticas iniciales vacías.
+- Registro de predicciones.
+- Funcionamiento del endpoint `/predecir`.
+- Funcionamiento del endpoint `/estadisticas`.
+
+Para ejecutar las pruebas:
+
+```bash
+pytest -q
+```
+
+Resultado esperado:
+
+```text
+6 passed
+```
 
