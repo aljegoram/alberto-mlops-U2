@@ -202,4 +202,49 @@ Resultado esperado:
 ```text
 6 passed
 ```
+## CI/CD con GitHub Actions
+
+El proyecto incluye un workflow de CI/CD en:
+
+```text
+.github/workflows/ci-cd.yml
+```
+
+El workflow se ejecuta en dos eventos:
+
+### Pull Request hacia `main`
+
+Cuando se crea un Pull Request contra `main`, el workflow:
+
+1. Comenta en el PR: `CI/CD en acción. Ejecutando tareas …`
+2. Descarga el código.
+3. Configura Python 3.11.
+4. Instala dependencias.
+5. Ejecuta pruebas unitarias con `python -m pytest -q`.
+6. Si todo sale bien, comenta: `CI/CD terminado con éxito.`
+
+### Push en `main`
+
+Cuando hay un push en `main`, normalmente después de un merge, el workflow:
+
+1. Descarga el código.
+2. Configura Python 3.11.
+3. Instala dependencias.
+4. Ejecuta pruebas unitarias.
+5. Construye una imagen Docker.
+6. Publica la imagen en GitHub Container Registry / GitHub Packages.
+
+## Imagen Docker publicada
+
+La imagen se publica con formato:
+
+```text
+ghcr.io/<usuario>/<repositorio>:latest
+```
+
+Ejemplo:
+
+```text
+ghcr.io/aljegoram/alberto-mlops-U2:latest
+```
 
